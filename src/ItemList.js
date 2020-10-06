@@ -2,10 +2,17 @@ import React, { useState } from 'react';
 import './itemList.css'
 import nextId  from 'react-id-generator'
 import trash from './trash.png'
+import { useReducer } from 'react';
+import {listReducer} from './listReducer';
+
+const init = () => {
+    return [];
+}
 
 const AddItem = () => {
     const [ text, setText ] = useState('');
-	const [ items, setItems ] = useState([]);
+    
+    const [itemList, dispatch] = useReducer(listReducer, [], init)
 
 	const handleInputChange = (e) => {
 		const textValue = e.target.value;
@@ -15,35 +22,43 @@ const AddItem = () => {
     const handleAdd = (e) => {
         e.preventDefault();
 
-         if(text !== ''){
-             const newItem = {
-                 id: nextId(),
-                 desc: text,
-                 checked: false,
-             }
-             setItems([newItem, ...items]);
+        
+        if(text !== ''){
 
+            const newItem = {
+                id: nextId(),
+                desc: text,
+                checked: false,
+            }
+            
+            const action = {
+                type: 'add',
+                payload: newItem,
+            }
              setText('');
+             dispatch(action);
+
          } else {
              alert('No has escrito nada')
          }
     }
 
     const handleDelete = (itemID) => {
-        const newArray = items.filter((item) => item.id !== itemID)
+        const action = {
+            type: 'delete',
+            payload: itemID
+        }
 
-        console.log(newArray);
-
-        setItems(newArray);
-
-        console.log(items);
+        dispatch(action);
     }
     
     const checkItem = (itemID) => {
-        items[itemID].checked = !items[itemID].checked;
+        const action = {
+            type: "check",
+            payload: itemID
+        }
 
-        const newItems = items.filter((i) => i);
-        setItems(newItems);
+        dispatch(action);
     }
 
 	return (
@@ -55,7 +70,7 @@ const AddItem = () => {
 		    </form>
 
             <div className='list'>
-                {items.length > 0 ? items.map((item, i) => (
+                {itemList.length > 0 ? itemList.map((item, i) => (
                     <div key={item.id}  className={` list-item ${item.checked && 'complete'}`} >
                         <p className={`par ${item.checked && 'complete-p'}` } onClick={() => checkItem(i)}> {item.desc}</p>
                         <button className='list-item-button' onClick={() => handleDelete(item.id)}> <img src={trash} alt='trash'/> </button>

@@ -1,20 +1,19 @@
-import { useState } from 'react';
+export const listReducer = (list = [], action) => {
+  switch (action.type) {
+    case "add":
+      return [action.payload, ...list];
 
-const listReducer = ({type, action}) => {
+    case "delete":
+      return list.filter((item) => item.id !== action.payload);
 
-    const [items, setItems] = useState([]);
+    case "check":
+      return list.map((item) =>
+        item.id === action.payload ? { ...item, checked: !item.checked } : item
+      );
 
-    switch (type) {
-        case 'add':
-            
-            break;
-    
-        default:
-            break;
-    }
+    default:
+      break;
+  }
 
-    return items;
-
-}
-
-export listReducer;
+  return list;
+};
