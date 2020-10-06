@@ -32,6 +32,8 @@ label{
     box-shadow: 3px 3px 4px #f6e5f5;
     background: none;
     box-sizing: unset;
+    border-radius: 10px;
+
 }
 
 .empty{
@@ -48,6 +50,7 @@ label{
     margin-top:5px ;
     border: none;
     border-bottom: 1px solid #777777;
+    border-radius: 20px;
 }
 
 .list{
